@@ -56,6 +56,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.cash.cash">
+            function <span class="apidocSignatureSpan"></span>cash
+            <span class="apidocSignatureSpan">(str, cbk)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.cash.alias">
             function <span class="apidocSignatureSpan">cash.</span>alias
             <span class="apidocSignatureSpan">(args, options, callback)</span>
@@ -281,7 +290,10 @@
 
         <li>
 
-            <span class="apidocSignatureSpan">function <span class="apidocSignatureSpan">cash.</span>vorpal.lodash</span>
+            <a class="apidocElementLiA" href="#apidoc.element.cash.vorpal.lodash">
+            function <span class="apidocSignatureSpan">cash.</span>vorpal.lodash
+            <span class="apidocSignatureSpan">{{signature}}</span>
+            </a>
 
         </li>
 
@@ -369,7 +381,10 @@
 
         <li>
 
-            <span class="apidocSignatureSpan">function <span class="apidocSignatureSpan">cash.vorpal.</span>lodash</span>
+            <a class="apidocElementLiA" href="#apidoc.element.cash.vorpal.lodash">
+            function <span class="apidocSignatureSpan">cash.vorpal.</span>lodash
+            <span class="apidocSignatureSpan">{{signature}}</span>
+            </a>
 
         </li>
 
@@ -679,13 +694,19 @@
 
         <li>
 
-            <span class="apidocSignatureSpan">function <span class="apidocSignatureSpan">cash.vorpal.</span>lodash</span>
+            <a class="apidocElementLiA" href="#apidoc.element.cash.vorpal.lodash.lodash">
+            function <span class="apidocSignatureSpan">cash.vorpal.</span>lodash
+            <span class="apidocSignatureSpan">{{signature}}</span>
+            </a>
 
         </li>
 
         <li>
 
-            <span class="apidocSignatureSpan">function <span class="apidocSignatureSpan">cash.vorpal.lodash.</span>_</span>
+            <a class="apidocElementLiA" href="#apidoc.element.cash.vorpal.lodash._">
+            function <span class="apidocSignatureSpan">cash.vorpal.lodash.</span>_
+            <span class="apidocSignatureSpan">{{signature}}</span>
+            </a>
 
         </li>
 
@@ -6455,6 +6476,54 @@
 
 
     <h2>
+        <a href="#apidoc.element.cash.cash" id="apidoc.element.cash.cash">
+        function <span class="apidocSignatureSpan"></span>cash
+        <span class="apidocSignatureSpan">(str, cbk)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function _export(str, cbk) {
+  // Is this a tagged template literal?
+  var tmpl = Array.isArray(str) &amp;&amp; Array.isArray(str.raw);
+  cbk = tmpl &amp;&amp; cbk || function () {};
+  var options = {
+    fatal: app._fatal || false
+  };
+  // Hook stdin, execute the command and
+  // then return it all.
+  var intercept = require('./util/intercept');
+  var out = '';
+  var unhook = intercept(function (str) {
+    out += str + '\n';
+    return '';
+  });
+  var commands = undefined;
+  if (tmpl) {
+    // Render into a single string, inserting interpolated values.
+    var interpVals = [].concat(Array.prototype.slice.call(arguments)).slice(1);
+    var interpStr = str[0];
+    for (var i = 0, l = interpVals.length; i &lt; l; i++) {
+      interpStr += '' + interpVals[i] + str[i + 1];
+    }
+    // Split into lines.  Remove blank lines and comments (start with #)
+    commands = interpStr.split(/\r\n|\r|\n/).filter(function (command) {
+      return !/^\s*(?:#|$)/.test(command);
+    });
+  } else {
+    commands = [str];
+  }
+  commands.forEach(function (command) {
+    app.vorpal.execSync(command, options);
+  });
+  unhook();
+  return String(out).replace(/\n$/, '');
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
         <a href="#apidoc.element.cash.alias" id="apidoc.element.cash.alias">
         function <span class="apidocSignatureSpan">cash.</span>alias
         <span class="apidocSignatureSpan">(args, options, callback)</span>
@@ -6474,7 +6543,24 @@
     silent: true
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+};
+
+module.exports = function (vorpal) {
+if (vorpal === undefined) {
+  return source;
+}
+vorpal.api.source = source;
+vorpal.command('source [file] [params...]').<span class="apidocCodeKeywordSpan">alias</span>('.').parse(preparser
+).action(function (args, callback) {
+  args.options = args.options || {};
+  args.options.vorpal = vorpal;
+  return interfacer.call(this, {
+    command: source,
+    args: args,
+    options: args.options,
+    callback: callback
+...</pre></li>
     </ul>
 
 
@@ -6906,7 +6992,17 @@ const out = $('ls -lah');
 <span class="apidocCodeCommentSpan">  /* istanbul ignore next */
 </span>  app.vorpal.show();
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+#!/usr/bin/env node
+'use strict';
+var cash = require('../dist/index');
+var delimiter = require('./../dist/delimiter')
+delimiter.refresh(cash.vorpal, function () {
+  cash.<span class="apidocCodeKeywordSpan">show</span>();
+});
+...</pre></li>
     </ul>
 
 
@@ -6931,7 +7027,23 @@ const out = $('ls -lah');
     silent: true
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// pushing the results into `rawFiles`.
+walkDir(path, pushFile);
+
+// Sort alphabetically be default,
+// unless -U is specified, in which case
+// we don't sort.
+if (!options.U) {
+  rawFiles = rawFiles.<span class="apidocCodeKeywordSpan">sort</span>(function (a, b) {
+    // Sort by size.
+    if (options.S) {
+      // Hack for windows - a directory lising
+      // in linux says the size is 4096, and Windows
+      // it's 0, leading to inconsistent sorts based
+      // on size, and failing tests.
+      var win = os.platform() === 'win32';
+...</pre></li>
     </ul>
 
 
@@ -7098,6 +7210,17 @@ const out = $('ls -lah');
 
 
 
+    <h2>
+        <a href="#apidoc.element.cash.vorpal.lodash" id="apidoc.element.cash.vorpal.lodash">
+        function <span class="apidocSignatureSpan">cash.</span>vorpal.lodash
+        <span class="apidocSignatureSpan">{{signature}}</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
 
@@ -7196,6 +7319,17 @@ const out = $('ls -lah');
     </ul>
 
 
+
+    <h2>
+        <a href="#apidoc.element.cash.vorpal.lodash" id="apidoc.element.cash.vorpal.lodash">
+        function <span class="apidocSignatureSpan">cash.vorpal.</span>lodash
+        <span class="apidocSignatureSpan">{{signature}}</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
 
 
 
@@ -7375,7 +7509,23 @@ const out = $('ls -lah');
   }
   return this;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      cwd = cwd.replace(home, '~');
+      var delimiter = user + '@' + host + ':' + cwd + '$';
+      // If we're on linux-based systems, color
+      // the prompt so we don't get confused.
+      if (!isWindows) {
+        delimiter = '\u001b[32m' + delimiter + '\u001b[39m';
+      }
+      vorpal.<span class="apidocCodeKeywordSpan">delimiter</span>(delimiter);
+    }
+    cb(err);
+  });
+},
+getHomeDir: function getHomeDir() {
+  return userHome;
+}
+...</pre></li>
     </ul>
 
 
@@ -7693,7 +7843,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">help = function (command) {
   this.log(this.parent._commandHelp(command || ''));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    let help;
+    try {
+      help = require('./../dist/help/' + command + '.js');
+      help = String(help).replace(/^\n|\n$/g, '');
+    } catch (e) {}
+    let cmdObj = vorpal.find(command);
+    if (cmdObj &amp;&amp; help) {
+      cmdObj.<span class="apidocCodeKeywordSpan">help</span>(function (argus, cb) {
+        cb(help);
+      })
+    }
+  }
+  vorpal.exec(command + ' ' + args);
+} else {
+  // If we get into piping other commands,
+...</pre></li>
     </ul>
 
 
@@ -7711,7 +7877,23 @@ const out = $('ls -lah');
     this.cmdHistory.newCommand(str);
   }
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  }
+};
+
+for (var cmd in app.vorpal.api) {
+  _loop(cmd);
+}
+
+app.vorpal.<span class="apidocCodeKeywordSpan">history</span>('cash').localStorage('cash').help(help);
+
+app.vorpal.find('exit').action(function () {
+  /* istanbul ignore next */
+  process.exit(1);
+});
+
+// Load aliases
+...</pre></li>
     </ul>
 
 
@@ -7742,7 +7924,23 @@ const out = $('ls -lah');
   var args = util.fixArgsForApply(arguments);
   return this._log.apply(this, args);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+        cmdObj.help(function (args, cb) {
+          cb(help);
+        });
+      }
+    })();
+  } catch (e) {
+    /* istanbul ignore next */
+    self.vorpal.<span class="apidocCodeKeywordSpan">log</span>('Error loading command ' + cmd + ': ', e);
+  }
+});
+this.importedCommands.forEach(function (cmd) {
+  try {
+    var mod = require('vorpal-' + cmd);
+    self.vorpal.use(mod, {
+      parent: self
+...</pre></li>
     </ul>
 
 
@@ -7757,7 +7955,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">match = function (str, arr) {
   return this._autocomplete(str, arr);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// Parse similarly to how `alias` does
+var id = args.join(' ');
+var value = '';
+if (String(id).indexOf('=') &gt; -1) {
+  var parts = String(id).trim().split('=');
+  id = parts[0];
+  value = parts[1] || value;
+  if (value.<span class="apidocCodeKeywordSpan">match</span>(/^".*"$/)) {
+    value = JSON.parse(value);
+  } else {
+    var regMatch = value.match(/^'(.*)'$/);
+    if (regMatch &amp;&amp; regMatch[1]) {
+      value = regMatch[1];
+    }
+  }
+...</pre></li>
     </ul>
 
 
@@ -7869,7 +8083,29 @@ const out = $('ls -lah');
 <h1><a href="#apidoc.module.cash.vorpal.lodash" id="apidoc.module.cash.vorpal.lodash">module cash.vorpal.lodash</a></h1>
 
 
+    <h2>
+        <a href="#apidoc.element.cash.vorpal.lodash.lodash" id="apidoc.element.cash.vorpal.lodash.lodash">
+        function <span class="apidocSignatureSpan">cash.vorpal.</span>lodash
+        <span class="apidocSignatureSpan">{{signature}}</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
 
+
+
+    <h2>
+        <a href="#apidoc.element.cash.vorpal.lodash._" id="apidoc.element.cash.vorpal.lodash._">
+        function <span class="apidocSignatureSpan">cash.vorpal.lodash.</span>_
+        <span class="apidocSignatureSpan">{{signature}}</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
 
 
 
@@ -7978,7 +8214,22 @@ const out = $('ls -lah');
   }
   return object;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      }
+    } catch (e) {
+      // File doesn't exist, so just don't load defaults
+    }
+  }
+
+  app.export.vorpal = app.vorpal;
+  Object.<span class="apidocCodeKeywordSpan">assign</span>(app.export, cmds);
+  return this;
+}
+};
+
+cmds = {
+/* istanbul ignore next */
+...</pre></li>
     </ul>
 
 
@@ -8287,7 +8538,23 @@ const out = $('ls -lah');
   }
   return func(number);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+result += 'These shell commands are defined internally.  Type `help\' to see this list.\n';
+result += 'Type `help name\' to find out more about the function `name\'.\n';
+result += 'Use `info cash\' to find out more about the shell in general.\n';
+result += '\n';
+
+var half = Math.floor(commands.length / 2);
+var width = Math.floor((process.stdout.columns - 3) / 2);
+var lhalf = Math.<span class="apidocCodeKeywordSpan">ceil</span>(commands.length / 2);
+var padding = commands.length % 2 === 1 ? 1 : 0;
+for (var i = 0; i &lt; lhalf; ++i) {
+  var colA = pad(chop(commands[i], width), width);
+  var colB = pad(chop(commands[half + i + padding] || '', width), width);
+  var line = i === lhalf - 1 ? '' : '\n';
+  result += ' ' + colA + ' ' + colB + line;
+}
+...</pre></li>
     </ul>
 
 
@@ -8377,7 +8644,27 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function clone(value) {
   return baseClone(value, CLONE_SYMBOLS_FLAG);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      f,
+      h,
+      l = 0,
+      n = 0,
+      x = 0;g = jc(b, c, null, e);0 &lt; d &amp;&amp; (n = x = d, f = !0);if (!g.c.isValid()) return !1;if (g.set &amp;&amp;
+; g.set.e) {
+    Rb.forEach(function (b) {
+      b.name === g.set.e &amp;&amp; (l = b.b(g.c, a - g.c) - 1);
+    });b = Yb(g.set.e);if (g.set.edge || g.set.shift) g.c["beginningOf" + b]();"month" === g.set.e &amp;&amp;
+; (h = g.c.<span class="apidocCodeKeywordSpan">clone</span>()["endOf" + b]().getTime());!f &amp;&amp; g.set.sign &amp;
+;&amp; "millisecond" != g.set.e &amp;&amp; (n = 50, x = -50);
+  }f = a.getTime();b = g.c.getTime();h = sc(a, b, h || b + l);return f &gt;= b - n &amp;&amp; f &lt;= h + x;
+}
+function sc(a, b, c) {
+  b = new r(b);a = new r(c).utc(a.isUTC());23 !== U(a, "Hours") &amp;&amp; (b = b.getTimezoneOffset(), a = a.getTimezoneOffset
+(), b !== a &amp;&amp; (c += (a - b).minutes()));return c;
+}
+function kc(a, b, c, d, e) {
+  function g(a) {
+...</pre></li>
     </ul>
 
 
@@ -8476,7 +8763,23 @@ const out = $('ls -lah');
   }
   return arrayPush(isArray(array) ? copyArray(array) : [array], baseFlatten(args, 1));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var unhook = intercept(function (str) {
+  out += str + '\n';
+  return '';
+});
+var commands = undefined;
+if (tmpl) {
+  // Render into a single string, inserting interpolated values.
+  var interpVals = [].<span class="apidocCodeKeywordSpan">concat</span>(Array.prototype.slice.call(arguments)).slice(1);
+  var interpStr = str[0];
+  for (var i = 0, l = interpVals.length; i &lt; l; i++) {
+    interpStr += '' + interpVals[i] + str[i + 1];
+  }
+  // Split into lines.  Remove blank lines and comments (start with #)
+  commands = interpStr.split(/\r\n|\r|\n/).filter(function (command) {
+    return !/^\s*(?:#|$)/.test(command);
+...</pre></li>
     </ul>
 
 
@@ -8590,7 +8893,23 @@ const out = $('ls -lah');
   var result = baseCreate(prototype);
   return properties == null ? result : baseAssign(result, properties);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    throw new Error(e);
+  } else {
+    fs.closeSync(fs.openSync(path, 'wx'));
+  }
+}
+
+var stat = fs.statSync(path);
+var dateToSet = options.date ? Date.<span class="apidocCodeKeywordSpan">create</span>(options.date) : new Date();
+
+if (String(dateToSet) === 'Invalid Date') {
+  throw new Error('touch: invalid date format ' + options.date);
+}
+
+// If -m, keep access time current.
+var atime = options.m === true ? new Date(stat.atime) : dateToSet;
+...</pre></li>
     </ul>
 
 
@@ -9227,7 +9546,39 @@ const out = $('ls -lah');
   }
   return object;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  function c() {
+    return R(this * b);
+  }function d() {
+    return tc(arguments)[a.j](this);
+  }function e() {
+    return tc(arguments)[a.j](-this);
+  }var g = a.name,
+      f = {};f[g] = c;f[g + "s"] = c;f[g + "Before"] = e;f[g + "sBefore"] = e;f[g + "Ago"
+;] = e;f[g + "sAgo"] = e;f[g + "After"] = d;f[g + "sAfter"] = d;f[g + "FromNow"] = d;f[g
+ + "sFromNow"] = d;t.<span class="apidocCodeKeywordSpan">extend</span>(f);
+}H(t, !0, !0, { duration: function duration(a) {
+    a = Y(a);return Xb(a, lc(this), "duration");
+  } });
+W = Ib = r.addLocale("en", { plural: !0, timeMarker: "at", ampm: "am,pm", months: "January,February
+,March,April,May,June,July,August,September,October,November,December", weekdays: "Sunday,Monday,Tuesday,Wednesday,Thursday
+,Friday,Saturday", units: "millisecond:|s,second:|s,minute:|s,hour:|s,day:|s,week:|s,month:|s,year:|s", numbers: &amp;#
+x22;one,two,three,four,five,six,seven,eight,nine,ten", articles: "a,an,the", tokens: "the,st|nd|rd|th,of"
+;, "short": "{Month} {d}, {yyyy}", "long": "{Month} {d}, {yyyy} {h}:{mm}{tt}", full: "
+;{Weekday} {Month} {d}, {yyyy} {h}:{mm}:{ss}{tt}",
+  past: "{num} {unit} {sign}", future: "{num} {unit} {sign}", duration: "{num} {unit}", modifiers: [{
+name: "sign", src: "ago|before", value: -1 }, { name: "sign", src: "from now|after|from|in|later
+", value: 1 }, { name: "edge", src: "last day", value: -2 }, { name: "edge", src: "end&amp;#
+x22;, value: -1 }, { name: "edge", src: "first day|beginning", value: 1 }, { name: "shift", src: &amp;#
+x22;last", value: -1 }, { name: "shift", src: "the|this", value: 0 }, { name: "shift", src: &amp;#
+x22;next", value: 1 }], dateParse: ["{month} {year}", "{shift} {unit=5-7}", "{0?} {date}{1}", &amp;#
+x22;{0?} {edge} of {shift?} {unit=4-7?}{month?}{year?}"],
+  timeParse: "{num} {unit} {sign};{sign} {num} {unit};{0} {num}{1} {day} of {month} {year?};{weekday?} {month} {date}{1?} {
+year?};{date} {month} {year};{date} {month};{shift} {weekday};{shift} week {weekday};{weekday} {2?} {shift} week;{num} {unit=4-5
+} {sign} {day};{0?} {date}{1} of {month};{0?}{month?} {date?}{1?} of {shift} {unit=6-7}".split(";") });Ob = Rb.concat
+().reverse();Nb = Rb.concat();Nb.splice(2, 1);
+K(r, !0, !0, Rb, function (a, b, c) {
+...</pre></li>
     </ul>
 
 
@@ -9301,7 +9652,23 @@ const out = $('ls -lah');
   var func = isArray(collection) ? arrayFilter : baseFilter;
   return func(collection, getIteratee(predicate, 3));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  // Render into a single string, inserting interpolated values.
+  var interpVals = [].concat(Array.prototype.slice.call(arguments)).slice(1);
+  var interpStr = str[0];
+  for (var i = 0, l = interpVals.length; i &lt; l; i++) {
+    interpStr += '' + interpVals[i] + str[i + 1];
+  }
+  // Split into lines.  Remove blank lines and comments (start with #)
+  commands = interpStr.split(/\r\n|\r|\n/).<span class="apidocCodeKeywordSpan">filter</span>(function (command) {
+    return !/^\s*(?:#|$)/.test(command);
+  });
+} else {
+  commands = [str];
+}
+commands.forEach(function (command) {
+  app.vorpal.execSync(command, options);
+...</pre></li>
     </ul>
 
 
@@ -9323,7 +9690,23 @@ const out = $('ls -lah');
   var index = findIndexFunc(collection, predicate, fromIndex);
   return index &gt; -1 ? iterable[iteratee ? collection[index] : index] : undefined;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// the help file.
+if (args.indexOf('help') &gt; -1 || args.indexOf('?') &gt; -1) {
+  let help;
+  try {
+    help = require('./../dist/help/' + command + '.js');
+    help = String(help).replace(/^\n|\n$/g, '');
+  } catch (e) {}
+  let cmdObj = vorpal.<span class="apidocCodeKeywordSpan">find</span>(command);
+  if (cmdObj &amp;&amp; help) {
+    cmdObj.help(function (argus, cb) {
+      cb(help);
+    })
+  }
+}
+vorpal.exec(command + ' ' + args);
+...</pre></li>
     </ul>
 
 
@@ -9578,7 +9961,23 @@ const out = $('ls -lah');
   }
   return func(number);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+result += 'Cash, version ' + version + '\n';
+result += 'These shell commands are defined internally.  Type `help\' to see this list.\n';
+result += 'Type `help name\' to find out more about the function `name\'.\n';
+result += 'Use `info cash\' to find out more about the shell in general.\n';
+result += '\n';
+
+var half = Math.<span class="apidocCodeKeywordSpan">floor</span>(commands.length / 2);
+var width = Math.floor((process.stdout.columns - 3) / 2);
+var lhalf = Math.ceil(commands.length / 2);
+var padding = commands.length % 2 === 1 ? 1 : 0;
+for (var i = 0; i &lt; lhalf; ++i) {
+  var colA = pad(chop(commands[i], width), width);
+  var colB = pad(chop(commands[half + i + padding] || '', width), width);
+  var line = i === lhalf - 1 ? '' : '\n';
+...</pre></li>
     </ul>
 
 
@@ -9720,7 +10119,23 @@ const out = $('ls -lah');
   var func = isArray(collection) ? arrayEach : baseEach;
   return func(collection, getIteratee(iteratee, 3));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    // Split into lines.  Remove blank lines and comments (start with #)
+    commands = interpStr.split(/\r\n|\r|\n/).filter(function (command) {
+      return !/^\s*(?:#|$)/.test(command);
+    });
+  } else {
+    commands = [str];
+  }
+  commands.<span class="apidocCodeKeywordSpan">forEach</span>(function (command) {
+    app.vorpal.execSync(command, options);
+  });
+  unhook();
+  return String(out).replace(/\n$/, '');
+},
+load: function load() {
+  var self = this;
+...</pre></li>
     </ul>
 
 
@@ -10055,7 +10470,23 @@ const out = $('ls -lah');
   }
   return baseIndexOf(array, value, index);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+
+'use strict';
+
+module.exports = function (args, command) {
+args.splice(0, 2);
+var pipes = (args.<span class="apidocCodeKeywordSpan">indexOf</span>('|') &gt; -1);
+if (args.length === 0) {
+  // If we don't have to parse arguments, do
+  // the quickest load: just the raw js file
+  // of the command and nothing else.
+  var cmd = require('./../dist/commands/' + command)();
+  cmd.exec.call(console, {options: {}}, {});
+} else if (pipes === false) {
+...</pre></li>
     </ul>
 
 
@@ -10236,7 +10667,23 @@ const out = $('ls -lah');
     </h2>
     <ul>
     <li>description and source-code<pre class="apidocCodePre">function isArray() { [native code] }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+_cwd: process.cwd(),
+
+_fatal: false,
+
+export: function _export(str, cbk) {
+  // Is this a tagged template literal?
+  var tmpl = Array.<span class="apidocCodeKeywordSpan">isArray</span>(str) &amp;&amp; Array.isArray(str.raw);
+  cbk = tmpl &amp;&amp; cbk || function () {};
+  var options = {
+    fatal: app._fatal || false
+  };
+  // Hook stdin, execute the command and
+  // then return it all.
+  var intercept = require('./util/intercept');
+...</pre></li>
     </ul>
 
 
@@ -10480,7 +10927,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function isInteger(value) {
   return typeof value == 'number' &amp;&amp; value == toInteger(value);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var head = {
+  exec: function exec(args, options) {
+options = options || {};
+args = args || '';
+var source = args.stdin === undefined ? 'files' : 'stdin';
+
+var lines = options.lines ? Math.abs(options.lines) : 10;
+if (!Number.<span class="apidocCodeKeywordSpan">isInteger</span>(lines)) {
+  this.log('head: ' + options.lines + ': invalid number of lines');
+  return 0;
+}
+
+/* istanbul ignore next */
+if (source === 'stdin') {
+  var _stdout = head.readLines(args.stdin[0], lines);
+...</pre></li>
     </ul>
 
 
@@ -10846,7 +11309,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function join(array, separator) {
   return array == null ? '' : nativeJoin.call(array, separator);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  } else if (pipes === false) {
+// If we need to parse args for this
+// command only, pull up vorpal and just load
+// that one command.
+var vorpal = require('vorpal')();
+vorpal.api = {};
+require('./../dist/commands/' + command)(vorpal);
+args = args.<span class="apidocCodeKeywordSpan">join</span>(' ');
+
+// If we passed in a help request, load in
+// the help file.
+if (args.indexOf('help') &gt; -1 || args.indexOf('?') &gt; -1) {
+  let help;
+  try {
+    help = require('./../dist/help/' + command + '.js');
+...</pre></li>
     </ul>
 
 
@@ -10894,7 +11373,24 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function keys(object) {
   return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      g,
+      f,
+      h,
+      l,
+      n;if ("string" === c) return a;g = v.call(a);d = va(a, g);e = A(a, g);if (null != a &amp;&amp; d || e) {
+    b || (b = []);if (1 &lt; b.length) for (l = b.length; l--;) {
+      if (b[l] === a) return "CYC";
+    }b.push(a);d = a.valueOf() + s(a.constructor);f = e ? a : m.<span class="apidocCodeKeywordSpan">keys</span>(a).sort();l = 0;
+for (n = f.length; l &lt; n; l++) {
+      h = e ? l : f[l], d += h + Ta(a[h], b);
+    }b.pop();
+  } else d = -Infinity === 1 / a ? "-0" : s(a &amp;&amp; a.valueOf ? a.valueOf() : a);return c + g + d;
+}function Ua(a, b) {
+  return a === b ? 0 !== a || 1 / a === 1 / b : Va(a) &amp;&amp; Va(b) ? Ta(a) === Ta(b) : !1;
+}
+function Va(a) {
+...</pre></li>
     </ul>
 
 
@@ -10951,7 +11447,23 @@ const out = $('ls -lah');
     ? strictLastIndexOf(array, value, index)
     : baseFindIndex(array, baseIsNaN, index, true);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      d = 0,
+      e = [];for (cb(arguments); d &lt; c;) {
+    d in this &amp;&amp; a.call(b, this[d], d, this) &amp;&amp; e.push(this[d]), d++;
+  }return e;
+}, indexOf: function indexOf(a, b) {
+  return z(this) ? this.indexOf(a, b) : ab(this, a, b, 1);
+}, lastIndexOf: function lastIndexOf(a, b) {
+  return z(this) ? this.<span class="apidocCodeKeywordSpan">lastIndexOf</span>(a, b) : ab(this, a, b, -1);
+}, forEach: function forEach(a, b) {
+  var c = this.length,
+      d = 0;for (ta(a); d &lt; c;) {
+    d in this &amp;&amp; a.call(b, this[d], d, this), d++;
+  }
+}, reduce: function reduce(a, b) {
+  return bb(this, a, b);
+...</pre></li>
     </ul>
 
 
@@ -11049,7 +11561,23 @@ const out = $('ls -lah');
   var func = isArray(collection) ? arrayMap : baseMap;
   return func(collection, getIteratee(iteratee, 3));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+// Load .cashrc upon startup
+var locations = ['.cashrc'];
+if (process.platform === 'win32') {
+  /* istanbul ignore next */
+  locations.push('_cashrc');
+}
+locations = locations.<span class="apidocCodeKeywordSpan">map</span>(function (str) {
+  return path.join(delimiter.getHomeDir(), str);
+});
+
+for (var i = 0; i &lt; locations.length; ++i) {
+  try {
+    if (!fs.statSync(locations[i]).isDirectory()) {
+      app.vorpal.execSync('source ' + locations[i]);
+...</pre></li>
     </ul>
 
 
@@ -11138,7 +11666,18 @@ const out = $('ls -lah');
     ? baseExtremum(array, identity, baseGt)
     : undefined;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+ * @return {String}
+ * @api public
+ */
+
+module.exports = function (str, width, delimiter) {
+  width = Math.floor(width);
+  delimiter = delimiter || ' ';
+  var len = Math.<span class="apidocCodeKeywordSpan">max</span>(0, width - strip(str).length);
+  return Array(len + 1).join(delimiter) + str;
+};
+...</pre></li>
     </ul>
 
 
@@ -11511,7 +12050,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">now = function () {
   return root.Date.now();
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+}
+
+// Now that we know everything in the sub-tree has been deleted,
+// we can delete the main directory.
+var result = undefined;
+try {
+  // Retry on windows, sometimes it takes a little time before all the files in the directory are gone
+  var start = Date.<span class="apidocCodeKeywordSpan">now</span>();
+  while (true) {
+    try {
+      result = fs.rmdirSync(dir);
+      /* istanbul ignore next */
+      if (fs.existsSync(dir)) {
+        throw new Error('EAGAIN');
+      }
+...</pre></li>
     </ul>
 
 
@@ -12264,7 +12819,23 @@ const out = $('ls -lah');
 
   return args.length &lt; 3 ? string : string.replace(args[1], args[2]);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+// If we passed in a help request, load in
+// the help file.
+if (args.indexOf('help') &gt; -1 || args.indexOf('?') &gt; -1) {
+  let help;
+  try {
+    help = require('./../dist/help/' + command + '.js');
+    help = String(help).<span class="apidocCodeKeywordSpan">replace</span>(/^\n|\n$/g, '');
+  } catch (e) {}
+  let cmdObj = vorpal.find(command);
+  if (cmdObj &amp;&amp; help) {
+    cmdObj.help(function (argus, cb) {
+      cb(help);
+    })
+  }
+...</pre></li>
     </ul>
 
 
@@ -12331,7 +12902,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function reverse(array) {
   return array == null ? array : nativeReverse.call(array);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var bFileName = fileFromPath(b.file).trim().toLowerCase().replace(/\W/g, '');
+    return aFileName &gt; bFileName ? 1 : aFileName &lt; bFileName ? -1 : 0;
+  });
+}
+
+// Reverse whatever sort the user specified.
+if (options.reverse) {
+  rawFiles.<span class="apidocCodeKeywordSpan">reverse</span>();
+}
+
+var _loop = function _loop(i) {
+  var file = rawFiles[i].file;
+  var data = rawFiles[i].data;
+  var fileShort = fileFromPath(file);
+  var dotted = fileShort &amp;&amp; fileShort.charAt(0) === '.';
+...</pre></li>
     </ul>
 
 
@@ -12534,7 +13121,39 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function set(object, path, value) {
   return object == null ? object : baseSet(object, path, value);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+}function l() {
+  var a;fc(function (b, c, d) {
+    "day" === b &amp;&amp; (b = "date");if (M(k[b])) {
+      if (d &gt;= wb) return n.setTime(NaN), !1;a = a || {};a[b] = k[b];
+      delete k[b];
+    }
+  });a &amp;&amp; e(function () {
+    n.<span class="apidocCodeKeywordSpan">set</span>(a, !0);
+  });
+}var n, x, ha, vb, B, k, E, wb, Ba, ra, ca;n = cc();vb = [];n.utc(d);C(a) ? n.utc(a.isUTC()).setTime(a.getTime()) : y(a) ? n.setTime
+(a) : G(a) ? (n.set(a, !0), k = a) : z(a) &amp;&amp; (ha = Y(b), a = hc(a), ha &amp;&amp; I(ha.o ? [ha.o].concat(ha.g) : ha.
+g, function (c, d) {
+  var g = a.match(d.q);if (g) {
+    B = d.locale;k = gc(g, d.to);B.o = d;k.utc &amp;&amp; n.utc();if (k.timestamp) return k = k.timestamp, !1;d.r &amp;&amp; !
+z(k.month) &amp;&amp; (z(k.date) || Zb(ha, b)) &amp;&amp; (ca = k.month, k.month = k.date, k.date = ca);k.year &amp;&amp;
+2 === k.t.length &amp;&amp; (k.year = 100 * R(U(cc(), "FullYear") / 100) - 100 * R(k.year / 100) + k.year);k.month &amp;#
+x26;&amp; (k.month = B.getMonth(k.month), k.shift &amp;&amp; !k.unit &amp;&amp; (k.unit = B.units[7]));k.weekday &amp;&amp;
+; k.date ? delete k.weekday : k.weekday &amp;&amp; (k.weekday = B.getWeekday(k.weekday), k.shift &amp;&amp; !k.unit &amp;&amp;#
+x26; (k.unit = B.units[5]));k.day &amp;&amp; (ca = B.i[k.day]) ? (k.day = ca.value, n.reset(), x = !0) : k.day &amp;&amp; -1
+ &lt; (Ba = B.getWeekday(k.day)) &amp;&amp; (delete k.day, k.num &amp;&amp; k.month ? (e(f), k.day = 1) : k.weekday = Ba);
+k.date &amp;&amp; !y(k.date) &amp;&amp; (k.date = $b(B, k.date));k.ampm &amp;&amp; k.ampm === B.ampm[1] &amp;&amp; 12 &amp;#
+x3e; k.hour ? k.hour += 12 : k.ampm === B.ampm[0] &amp;&amp; 12 === k.hour &amp;&amp; (k.hour = 0);if ("offset_hours"
+; in k || "offset_minutes" in k) n.utc(), k.offset_minutes = k.offset_minutes || 0, k.offset_minutes += 60 * k.offset_hours
+, "-" === k.offset_sign &amp;&amp; (k.offset_minutes *= -1), k.minute -= k.offset_minutes;k.unit &amp;&amp; (x = !
+0, ra = ac(B, k.num), wb = B.units.indexOf(k.unit) % 8, E = W.units[wb], l(), k.shift &amp;&amp; (ra *= (ca = B.i[k.shift]) ?
+ca.value : 0), k.sign &amp;&amp; (ca = B.i[k.sign]) &amp;&amp; (ra *= ca.value), M(k.weekday) &amp;&amp; (n.set({ weekday:
+k.weekday }, !0), delete k.weekday), k[E] = (k[E] || 0) + ra);k.edge &amp;&amp; e(h);"-" === k.year_sign &amp;&amp;
+; (k.year *= -1);fc(function (a, b, c) {
+      b = k[a];var d = b % 1;d &amp;&amp; (k[Ob[c - 1].name] = R(d * ("second" === a ? 1E3 : 60)), k[a] = Q(b));
+    }, 1, 4);return !1;
+  }
+...</pre></li>
     </ul>
 
 
@@ -12618,7 +13237,30 @@ const out = $('ls -lah');
   }
   return baseSlice(array, start, end);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+'use strict';
+
+var pad = require('./util/pad');
+
+var commands = ['alias [-p] [name=[value]]', 'cat [-AbeEnstTv] [files ...]', 'cd [dir]', 'clear
+', 'cp [-fnr] source ... dest', 'echo [-eE] [arg ...]', 'export [-p][id=[value]]', 'false
+', 'grep [-bHhinqsvw] [-m max] [--silent] [--include pattern] pattern [files ...]', 'head [-nqv] &lt;files
+ ...&gt;', 'kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l', 'less [files ...]'
+;, 'ls [-aAdFhilQrRStUwx1] [paths ...]', 'mkdir [-pv] [directories ...]', 'mv [-fnv] source ... dest'
+;, 'pwd [files ...]', 'rm [-frR] [files ...]', 'sort [-chMnrR] [-o file] [files ...]', 'source
+ filename [arguments...]', 'tail [options] &lt;files ...&gt;', 'touch [-acm] [-d date] [-r ref] [--time
+word] file ...', 'true', 'unalias [-a] name [names ...]'];
+
+function chop(str, len) {
+var res = String(str).<span class="apidocCodeKeywordSpan">slice</span>(0, len - 2);
+res = res.length === len - 2 ? res + '&gt;' : res;
+return res;
+}
+
+module.exports = function () {
+var version = require('./../package.json').version;
+var result = '';
+...</pre></li>
     </ul>
 
 
@@ -12652,7 +13294,24 @@ const out = $('ls -lah');
   }
   return func(collection, getIteratee(predicate, 3));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+          return 0 &lt; U(e, "Day") &amp;&amp; 6 &gt; U(e, "Day");case "weekend" === a:
+          return 0 === U(e, "Day") || 6 === U(e, "Day");case -1 &lt; (d = W.weekdays.indexOf(a) % 7):
+          return U(e, "Day") === d;case -1 &lt; (d = W.months.indexOf(a) % 12):
+          return U(e, "Month") === d;}return rc(this, a, null, b, c);
+    }
+  }, reset: function reset(a) {
+    var b = {},
+        c;a = a || "hours";"date" === a &amp;&amp; (a = "days");c = Rb.<span class="apidocCodeKeywordSpan
+">some</span>(function (b) {
+      return a === b.name || a === b.name + "s";
+    });b[a] = a.match(/^days?/) ? 1 : 0;return c ? this.set(b, !0) : this;
+  }, clone: function clone() {
+    var a = new r(this.getTime());a.utc(!!this._utc);return a;
+  } });
+H(r, !0, !0, { iso: function iso() {
+    return this.toISOString();
+...</pre></li>
     </ul>
 
 
@@ -12846,7 +13505,23 @@ const out = $('ls -lah');
   }
   return string.split(separator, limit);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+module.exports = {
+refresh: function refresh(vorpal, cb) {
+  cb = cb || function () {};
+  username(function (err, username) {
+    if (!err) {
+      var user = username;
+      var host = String(os.hostname()).<span class="apidocCodeKeywordSpan">split</span>('.')[0];
+      var home = pathConverter.unix(userHome);
+      var cwd = pathConverter.unix(process.cwd());
+      cwd = cwd.replace(home, '~');
+      var delimiter = user + '@' + host + ':' + cwd + '$';
+      // If we're on linux-based systems, color
+      // the prompt so we don't get confused.
+      if (!isWindows) {
+...</pre></li>
     </ul>
 
 
@@ -13590,7 +14265,23 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function toString(value) {
   return value == null ? '' : baseToString(value);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// invalid command and instead throw
+// Cash help.
+var windowsHelpFlag = false;
+var windowsCommandReject = 'is not recognized as an internal or external command';
+
+/* istanbul ignore next */
+proc.stdout.on('data', function (data) {
+  out += data.<span class="apidocCodeKeywordSpan">toString</span>('utf8');
+});
+
+/* istanbul ignore next */
+proc.stderr.on('data', function (data) {
+  var str = data.toString('utf8');
+  if (windows &amp;&amp; str.indexOf(windowsCommandReject) &gt; -1) {
+    windowsHelpFlag = true;
+...</pre></li>
     </ul>
 
 
@@ -13666,7 +14357,23 @@ const out = $('ls -lah');
 
   return castSlice(strSymbols, start, end).join('');
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    return;
+  }
+  out += str;
+});
+
+proc.on('close', function () {
+  closed = true;
+  if (String(out).<span class="apidocCodeKeywordSpan">trim</span>() !== '') {
+    slf.log(String(out).replace(/\r\r/g, '\r'));
+    out = '';
+  }
+  if (windowsHelpFlag) {
+    slf.help();
+  }
+  /* istanbul ignore next */
+...</pre></li>
     </ul>
 
 
@@ -14385,7 +15092,22 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      }
+    } catch (e) {
+      // File doesn't exist, so just don't load defaults
+    }
+  }
+
+  app.export.vorpal = app.vorpal;
+  Object.<span class="apidocCodeKeywordSpan">assign</span>(app.export, cmds);
+  return this;
+}
+};
+
+cmds = {
+/* istanbul ignore next */
+...</pre></li>
     </ul>
 
 
@@ -14708,7 +15430,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+result += 'These shell commands are defined internally.  Type `help\' to see this list.\n';
+result += 'Type `help name\' to find out more about the function `name\'.\n';
+result += 'Use `info cash\' to find out more about the shell in general.\n';
+result += '\n';
+
+var half = Math.floor(commands.length / 2);
+var width = Math.floor((process.stdout.columns - 3) / 2);
+var lhalf = Math.<span class="apidocCodeKeywordSpan">ceil</span>(commands.length / 2);
+var padding = commands.length % 2 === 1 ? 1 : 0;
+for (var i = 0; i &lt; lhalf; ++i) {
+  var colA = pad(chop(commands[i], width), width);
+  var colB = pad(chop(commands[half + i + padding] || '', width), width);
+  var line = i === lhalf - 1 ? '' : '\n';
+  result += ' ' + colA + ' ' + colB + line;
+}
+...</pre></li>
     </ul>
 
 
@@ -14795,7 +15533,27 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      f,
+      h,
+      l = 0,
+      n = 0,
+      x = 0;g = jc(b, c, null, e);0 &lt; d &amp;&amp; (n = x = d, f = !0);if (!g.c.isValid()) return !1;if (g.set &amp;&amp;
+; g.set.e) {
+    Rb.forEach(function (b) {
+      b.name === g.set.e &amp;&amp; (l = b.b(g.c, a - g.c) - 1);
+    });b = Yb(g.set.e);if (g.set.edge || g.set.shift) g.c["beginningOf" + b]();"month" === g.set.e &amp;&amp;
+; (h = g.c.<span class="apidocCodeKeywordSpan">clone</span>()["endOf" + b]().getTime());!f &amp;&amp; g.set.sign &amp;
+;&amp; "millisecond" != g.set.e &amp;&amp; (n = 50, x = -50);
+  }f = a.getTime();b = g.c.getTime();h = sc(a, b, h || b + l);return f &gt;= b - n &amp;&amp; f &lt;= h + x;
+}
+function sc(a, b, c) {
+  b = new r(b);a = new r(c).utc(a.isUTC());23 !== U(a, "Hours") &amp;&amp; (b = b.getTimezoneOffset(), a = a.getTimezoneOffset
+(), b !== a &amp;&amp; (c += (a - b).minutes()));return c;
+}
+function kc(a, b, c, d, e) {
+  function g(a) {
+...</pre></li>
     </ul>
 
 
@@ -14951,7 +15709,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var unhook = intercept(function (str) {
+  out += str + '\n';
+  return '';
+});
+var commands = undefined;
+if (tmpl) {
+  // Render into a single string, inserting interpolated values.
+  var interpVals = [].<span class="apidocCodeKeywordSpan">concat</span>(Array.prototype.slice.call(arguments)).slice(1);
+  var interpStr = str[0];
+  for (var i = 0, l = interpVals.length; i &lt; l; i++) {
+    interpStr += '' + interpVals[i] + str[i + 1];
+  }
+  // Split into lines.  Remove blank lines and comments (start with #)
+  commands = interpStr.split(/\r\n|\r|\n/).filter(function (command) {
+    return !/^\s*(?:#|$)/.test(command);
+...</pre></li>
     </ul>
 
 
@@ -15095,7 +15869,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    throw new Error(e);
+  } else {
+    fs.closeSync(fs.openSync(path, 'wx'));
+  }
+}
+
+var stat = fs.statSync(path);
+var dateToSet = options.date ? Date.<span class="apidocCodeKeywordSpan">create</span>(options.date) : new Date();
+
+if (String(dateToSet) === 'Invalid Date') {
+  throw new Error('touch: invalid date format ' + options.date);
+}
+
+// If -m, keep access time current.
+var atime = options.m === true ? new Date(stat.atime) : dateToSet;
+...</pre></li>
     </ul>
 
 
@@ -15785,7 +16575,39 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  function c() {
+    return R(this * b);
+  }function d() {
+    return tc(arguments)[a.j](this);
+  }function e() {
+    return tc(arguments)[a.j](-this);
+  }var g = a.name,
+      f = {};f[g] = c;f[g + "s"] = c;f[g + "Before"] = e;f[g + "sBefore"] = e;f[g + "Ago"
+;] = e;f[g + "sAgo"] = e;f[g + "After"] = d;f[g + "sAfter"] = d;f[g + "FromNow"] = d;f[g
+ + "sFromNow"] = d;t.<span class="apidocCodeKeywordSpan">extend</span>(f);
+}H(t, !0, !0, { duration: function duration(a) {
+    a = Y(a);return Xb(a, lc(this), "duration");
+  } });
+W = Ib = r.addLocale("en", { plural: !0, timeMarker: "at", ampm: "am,pm", months: "January,February
+,March,April,May,June,July,August,September,October,November,December", weekdays: "Sunday,Monday,Tuesday,Wednesday,Thursday
+,Friday,Saturday", units: "millisecond:|s,second:|s,minute:|s,hour:|s,day:|s,week:|s,month:|s,year:|s", numbers: &amp;#
+x22;one,two,three,four,five,six,seven,eight,nine,ten", articles: "a,an,the", tokens: "the,st|nd|rd|th,of"
+;, "short": "{Month} {d}, {yyyy}", "long": "{Month} {d}, {yyyy} {h}:{mm}{tt}", full: "
+;{Weekday} {Month} {d}, {yyyy} {h}:{mm}:{ss}{tt}",
+  past: "{num} {unit} {sign}", future: "{num} {unit} {sign}", duration: "{num} {unit}", modifiers: [{
+name: "sign", src: "ago|before", value: -1 }, { name: "sign", src: "from now|after|from|in|later
+", value: 1 }, { name: "edge", src: "last day", value: -2 }, { name: "edge", src: "end&amp;#
+x22;, value: -1 }, { name: "edge", src: "first day|beginning", value: 1 }, { name: "shift", src: &amp;#
+x22;last", value: -1 }, { name: "shift", src: "the|this", value: 0 }, { name: "shift", src: &amp;#
+x22;next", value: 1 }], dateParse: ["{month} {year}", "{shift} {unit=5-7}", "{0?} {date}{1}", &amp;#
+x22;{0?} {edge} of {shift?} {unit=4-7?}{month?}{year?}"],
+  timeParse: "{num} {unit} {sign};{sign} {num} {unit};{0} {num}{1} {day} of {month} {year?};{weekday?} {month} {date}{1?} {
+year?};{date} {month} {year};{date} {month};{shift} {weekday};{shift} week {weekday};{weekday} {2?} {shift} week;{num} {unit=4-5
+} {sign} {day};{0?} {date}{1} of {month};{0?}{month?} {date?}{1?} of {shift} {unit=6-7}".split(";") });Ob = Rb.concat
+().reverse();Nb = Rb.concat();Nb.splice(2, 1);
+K(r, !0, !0, Rb, function (a, b, c) {
+...</pre></li>
     </ul>
 
 
@@ -15878,7 +16700,23 @@ const out = $('ls -lah');
   result = this.thru(interceptor);
   return isUnwrapped ? (isTaker ? result.value()[0] : result.value()) : result;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  // Render into a single string, inserting interpolated values.
+  var interpVals = [].concat(Array.prototype.slice.call(arguments)).slice(1);
+  var interpStr = str[0];
+  for (var i = 0, l = interpVals.length; i &lt; l; i++) {
+    interpStr += '' + interpVals[i] + str[i + 1];
+  }
+  // Split into lines.  Remove blank lines and comments (start with #)
+  commands = interpStr.split(/\r\n|\r|\n/).<span class="apidocCodeKeywordSpan">filter</span>(function (command) {
+    return !/^\s*(?:#|$)/.test(command);
+  });
+} else {
+  commands = [str];
+}
+commands.forEach(function (command) {
+  app.vorpal.execSync(command, options);
+...</pre></li>
     </ul>
 
 
@@ -15923,7 +16761,23 @@ const out = $('ls -lah');
   result = this.thru(interceptor);
   return isUnwrapped ? (isTaker ? result.value()[0] : result.value()) : result;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// the help file.
+if (args.indexOf('help') &gt; -1 || args.indexOf('?') &gt; -1) {
+  let help;
+  try {
+    help = require('./../dist/help/' + command + '.js');
+    help = String(help).replace(/^\n|\n$/g, '');
+  } catch (e) {}
+  let cmdObj = vorpal.<span class="apidocCodeKeywordSpan">find</span>(command);
+  if (cmdObj &amp;&amp; help) {
+    cmdObj.help(function (argus, cb) {
+      cb(help);
+    })
+  }
+}
+vorpal.exec(command + ' ' + args);
+...</pre></li>
     </ul>
 
 
@@ -16301,7 +17155,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+result += 'Cash, version ' + version + '\n';
+result += 'These shell commands are defined internally.  Type `help\' to see this list.\n';
+result += 'Type `help name\' to find out more about the function `name\'.\n';
+result += 'Use `info cash\' to find out more about the shell in general.\n';
+result += '\n';
+
+var half = Math.<span class="apidocCodeKeywordSpan">floor</span>(commands.length / 2);
+var width = Math.floor((process.stdout.columns - 3) / 2);
+var lhalf = Math.ceil(commands.length / 2);
+var padding = commands.length % 2 === 1 ? 1 : 0;
+for (var i = 0; i &lt; lhalf; ++i) {
+  var colA = pad(chop(commands[i], width), width);
+  var colB = pad(chop(commands[half + i + padding] || '', width), width);
+  var line = i === lhalf - 1 ? '' : '\n';
+...</pre></li>
     </ul>
 
 
@@ -16373,7 +17243,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    // Split into lines.  Remove blank lines and comments (start with #)
+    commands = interpStr.split(/\r\n|\r|\n/).filter(function (command) {
+      return !/^\s*(?:#|$)/.test(command);
+    });
+  } else {
+    commands = [str];
+  }
+  commands.<span class="apidocCodeKeywordSpan">forEach</span>(function (command) {
+    app.vorpal.execSync(command, options);
+  });
+  unhook();
+  return String(out).replace(/\n$/, '');
+},
+load: function load() {
+  var self = this;
+...</pre></li>
     </ul>
 
 
@@ -16850,7 +17736,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+
+'use strict';
+
+module.exports = function (args, command) {
+args.splice(0, 2);
+var pipes = (args.<span class="apidocCodeKeywordSpan">indexOf</span>('|') &gt; -1);
+if (args.length === 0) {
+  // If we don't have to parse arguments, do
+  // the quickest load: just the raw js file
+  // of the command and nothing else.
+  var cmd = require('./../dist/commands/' + command)();
+  cmd.exec.call(console, {options: {}}, {});
+} else if (pipes === false) {
+...</pre></li>
     </ul>
 
 
@@ -17132,7 +18034,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+_cwd: process.cwd(),
+
+_fatal: false,
+
+export: function _export(str, cbk) {
+  // Is this a tagged template literal?
+  var tmpl = Array.<span class="apidocCodeKeywordSpan">isArray</span>(str) &amp;&amp; Array.isArray(str.raw);
+  cbk = tmpl &amp;&amp; cbk || function () {};
+  var options = {
+    fatal: app._fatal || false
+  };
+  // Hook stdin, execute the command and
+  // then return it all.
+  var intercept = require('./util/intercept');
+...</pre></li>
     </ul>
 
 
@@ -17468,7 +18386,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+var head = {
+  exec: function exec(args, options) {
+options = options || {};
+args = args || '';
+var source = args.stdin === undefined ? 'files' : 'stdin';
+
+var lines = options.lines ? Math.abs(options.lines) : 10;
+if (!Number.<span class="apidocCodeKeywordSpan">isInteger</span>(lines)) {
+  this.log('head: ' + options.lines + ': invalid number of lines');
+  return 0;
+}
+
+/* istanbul ignore next */
+if (source === 'stdin') {
+  var _stdout = head.readLines(args.stdin[0], lines);
+...</pre></li>
     </ul>
 
 
@@ -18020,7 +18954,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  } else if (pipes === false) {
+// If we need to parse args for this
+// command only, pull up vorpal and just load
+// that one command.
+var vorpal = require('vorpal')();
+vorpal.api = {};
+require('./../dist/commands/' + command)(vorpal);
+args = args.<span class="apidocCodeKeywordSpan">join</span>(' ');
+
+// If we passed in a help request, load in
+// the help file.
+if (args.indexOf('help') &gt; -1 || args.indexOf('?') &gt; -1) {
+  let help;
+  try {
+    help = require('./../dist/help/' + command + '.js');
+...</pre></li>
     </ul>
 
 
@@ -18092,7 +19042,24 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      g,
+      f,
+      h,
+      l,
+      n;if ("string" === c) return a;g = v.call(a);d = va(a, g);e = A(a, g);if (null != a &amp;&amp; d || e) {
+    b || (b = []);if (1 &lt; b.length) for (l = b.length; l--;) {
+      if (b[l] === a) return "CYC";
+    }b.push(a);d = a.valueOf() + s(a.constructor);f = e ? a : m.<span class="apidocCodeKeywordSpan">keys</span>(a).sort();l = 0;
+for (n = f.length; l &lt; n; l++) {
+      h = e ? l : f[l], d += h + Ta(a[h], b);
+    }b.pop();
+  } else d = -Infinity === 1 / a ? "-0" : s(a &amp;&amp; a.valueOf ? a.valueOf() : a);return c + g + d;
+}function Ua(a, b) {
+  return a === b ? 0 !== a || 1 / a === 1 / b : Va(a) &amp;&amp; Va(b) ? Ta(a) === Ta(b) : !1;
+}
+function Va(a) {
+...</pre></li>
     </ul>
 
 
@@ -18185,7 +19152,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      d = 0,
+      e = [];for (cb(arguments); d &lt; c;) {
+    d in this &amp;&amp; a.call(b, this[d], d, this) &amp;&amp; e.push(this[d]), d++;
+  }return e;
+}, indexOf: function indexOf(a, b) {
+  return z(this) ? this.indexOf(a, b) : ab(this, a, b, 1);
+}, lastIndexOf: function lastIndexOf(a, b) {
+  return z(this) ? this.<span class="apidocCodeKeywordSpan">lastIndexOf</span>(a, b) : ab(this, a, b, -1);
+}, forEach: function forEach(a, b) {
+  var c = this.length,
+      d = 0;for (ta(a); d &lt; c;) {
+    d in this &amp;&amp; a.call(b, this[d], d, this), d++;
+  }
+}, reduce: function reduce(a, b) {
+  return bb(this, a, b);
+...</pre></li>
     </ul>
 
 
@@ -18326,7 +19309,23 @@ const out = $('ls -lah');
   result = this.thru(interceptor);
   return isUnwrapped ? (isTaker ? result.value()[0] : result.value()) : result;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+// Load .cashrc upon startup
+var locations = ['.cashrc'];
+if (process.platform === 'win32') {
+  /* istanbul ignore next */
+  locations.push('_cashrc');
+}
+locations = locations.<span class="apidocCodeKeywordSpan">map</span>(function (str) {
+  return path.join(delimiter.getHomeDir(), str);
+});
+
+for (var i = 0; i &lt; locations.length; ++i) {
+  try {
+    if (!fs.statSync(locations[i]).isDirectory()) {
+      app.vorpal.execSync('source ' + locations[i]);
+...</pre></li>
     </ul>
 
 
@@ -18446,7 +19445,18 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+ * @return {String}
+ * @api public
+ */
+
+module.exports = function (str, width, delimiter) {
+  width = Math.floor(width);
+  delimiter = delimiter || ' ';
+  var len = Math.<span class="apidocCodeKeywordSpan">max</span>(0, width - strip(str).length);
+  return Array(len + 1).join(delimiter) + str;
+};
+...</pre></li>
     </ul>
 
 
@@ -18851,7 +19861,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+}
+
+// Now that we know everything in the sub-tree has been deleted,
+// we can delete the main directory.
+var result = undefined;
+try {
+  // Retry on windows, sometimes it takes a little time before all the files in the directory are gone
+  var start = Date.<span class="apidocCodeKeywordSpan">now</span>();
+  while (true) {
+    try {
+      result = fs.rmdirSync(dir);
+      /* istanbul ignore next */
+      if (fs.existsSync(dir)) {
+        throw new Error('EAGAIN');
+      }
+...</pre></li>
     </ul>
 
 
@@ -19360,7 +20386,23 @@ const out = $('ls -lah');
     return func.apply(isArray(value) ? value : [], args);
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// Properly print stdout as it's fed,
+// waiting for line breaks before sending
+// it to Vorpal.
+function print() {
+  var parts = String(out).split('\n');
+  /* istanbul ignore next */
+  if (parts.length &gt; 1) {
+    out = parts.<span class="apidocCodeKeywordSpan">pop</span>();
+    var logging = String(parts.join('\n')).replace(/\r\r/g, '\r');
+    slf.log(logging);
+  }
+  /* istanbul ignore next */
+  if (closed === false) {
+    setTimeout(function () {
+      print();
+...</pre></li>
     </ul>
 
 
@@ -19550,7 +20592,23 @@ const out = $('ls -lah');
     return func.apply(isArray(value) ? value : [], args);
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  })();
+}
+
+// Load .cashrc upon startup
+var locations = ['.cashrc'];
+if (process.platform === 'win32') {
+  /* istanbul ignore next */
+  locations.<span class="apidocCodeKeywordSpan">push</span>('_cashrc');
+}
+locations = locations.map(function (str) {
+  return path.join(delimiter.getHomeDir(), str);
+});
+
+for (var i = 0; i &lt; locations.length; ++i) {
+  try {
+...</pre></li>
     </ul>
 
 
@@ -19811,7 +20869,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+// If we passed in a help request, load in
+// the help file.
+if (args.indexOf('help') &gt; -1 || args.indexOf('?') &gt; -1) {
+  let help;
+  try {
+    help = require('./../dist/help/' + command + '.js');
+    help = String(help).<span class="apidocCodeKeywordSpan">replace</span>(/^\n|\n$/g, '');
+  } catch (e) {}
+  let cmdObj = vorpal.find(command);
+  if (cmdObj &amp;&amp; help) {
+    cmdObj.help(function (argus, cb) {
+      cb(help);
+    })
+  }
+...</pre></li>
     </ul>
 
 
@@ -19888,7 +20962,23 @@ const out = $('ls -lah');
   }
   return this.thru(reverse);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    var bFileName = fileFromPath(b.file).trim().toLowerCase().replace(/\W/g, '');
+    return aFileName &gt; bFileName ? 1 : aFileName &lt; bFileName ? -1 : 0;
+  });
+}
+
+// Reverse whatever sort the user specified.
+if (options.reverse) {
+  rawFiles.<span class="apidocCodeKeywordSpan">reverse</span>();
+}
+
+var _loop = function _loop(i) {
+  var file = rawFiles[i].file;
+  var data = rawFiles[i].data;
+  var fileShort = fileFromPath(file);
+  var dotted = fileShort &amp;&amp; fileShort.charAt(0) === '.';
+...</pre></li>
     </ul>
 
 
@@ -20008,7 +21098,39 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+}function l() {
+  var a;fc(function (b, c, d) {
+    "day" === b &amp;&amp; (b = "date");if (M(k[b])) {
+      if (d &gt;= wb) return n.setTime(NaN), !1;a = a || {};a[b] = k[b];
+      delete k[b];
+    }
+  });a &amp;&amp; e(function () {
+    n.<span class="apidocCodeKeywordSpan">set</span>(a, !0);
+  });
+}var n, x, ha, vb, B, k, E, wb, Ba, ra, ca;n = cc();vb = [];n.utc(d);C(a) ? n.utc(a.isUTC()).setTime(a.getTime()) : y(a) ? n.setTime
+(a) : G(a) ? (n.set(a, !0), k = a) : z(a) &amp;&amp; (ha = Y(b), a = hc(a), ha &amp;&amp; I(ha.o ? [ha.o].concat(ha.g) : ha.
+g, function (c, d) {
+  var g = a.match(d.q);if (g) {
+    B = d.locale;k = gc(g, d.to);B.o = d;k.utc &amp;&amp; n.utc();if (k.timestamp) return k = k.timestamp, !1;d.r &amp;&amp; !
+z(k.month) &amp;&amp; (z(k.date) || Zb(ha, b)) &amp;&amp; (ca = k.month, k.month = k.date, k.date = ca);k.year &amp;&amp;
+2 === k.t.length &amp;&amp; (k.year = 100 * R(U(cc(), "FullYear") / 100) - 100 * R(k.year / 100) + k.year);k.month &amp;#
+x26;&amp; (k.month = B.getMonth(k.month), k.shift &amp;&amp; !k.unit &amp;&amp; (k.unit = B.units[7]));k.weekday &amp;&amp;
+; k.date ? delete k.weekday : k.weekday &amp;&amp; (k.weekday = B.getWeekday(k.weekday), k.shift &amp;&amp; !k.unit &amp;&amp;#
+x26; (k.unit = B.units[5]));k.day &amp;&amp; (ca = B.i[k.day]) ? (k.day = ca.value, n.reset(), x = !0) : k.day &amp;&amp; -1
+ &lt; (Ba = B.getWeekday(k.day)) &amp;&amp; (delete k.day, k.num &amp;&amp; k.month ? (e(f), k.day = 1) : k.weekday = Ba);
+k.date &amp;&amp; !y(k.date) &amp;&amp; (k.date = $b(B, k.date));k.ampm &amp;&amp; k.ampm === B.ampm[1] &amp;&amp; 12 &amp;#
+x3e; k.hour ? k.hour += 12 : k.ampm === B.ampm[0] &amp;&amp; 12 === k.hour &amp;&amp; (k.hour = 0);if ("offset_hours"
+; in k || "offset_minutes" in k) n.utc(), k.offset_minutes = k.offset_minutes || 0, k.offset_minutes += 60 * k.offset_hours
+, "-" === k.offset_sign &amp;&amp; (k.offset_minutes *= -1), k.minute -= k.offset_minutes;k.unit &amp;&amp; (x = !
+0, ra = ac(B, k.num), wb = B.units.indexOf(k.unit) % 8, E = W.units[wb], l(), k.shift &amp;&amp; (ra *= (ca = B.i[k.shift]) ?
+ca.value : 0), k.sign &amp;&amp; (ca = B.i[k.sign]) &amp;&amp; (ra *= ca.value), M(k.weekday) &amp;&amp; (n.set({ weekday:
+k.weekday }, !0), delete k.weekday), k[E] = (k[E] || 0) + ra);k.edge &amp;&amp; e(h);"-" === k.year_sign &amp;&amp;
+; (k.year *= -1);fc(function (a, b, c) {
+      b = k[a];var d = b % 1;d &amp;&amp; (k[Ob[c - 1].name] = R(d * ("second" === a ? 1E3 : 60)), k[a] = Q(b));
+    }, 1, 4);return !1;
+  }
+...</pre></li>
     </ul>
 
 
@@ -20054,7 +21176,23 @@ const out = $('ls -lah');
     return func.apply(isArray(value) ? value : [], args);
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+module.exports = {
+registerCommands: function registerCommands(self) {
+  self.vorpal.catch('[words...]', 'Catches content').parse(function (input) {
+    // Look for aliases and translate them.
+    // Makes cash.alias and cash.unalias work.
+    var parts = String(input).split(' ');
+    var first = parts.<span class="apidocCodeKeywordSpan">shift</span>();
+    var out = input;
+    var translation = self.vorpal._aliases[first];
+    if (self.vorpal._aliases &amp;&amp; translation) {
+      /* istanbul ignore next */
+      out = translation + ' ' + parts.join(' ');
+    }
+    return out;
+...</pre></li>
     </ul>
 
 
@@ -20147,7 +21285,30 @@ const out = $('ls -lah');
   result = this.thru(interceptor);
   return isUnwrapped ? (isTaker ? result.value()[0] : result.value()) : result;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+'use strict';
+
+var pad = require('./util/pad');
+
+var commands = ['alias [-p] [name=[value]]', 'cat [-AbeEnstTv] [files ...]', 'cd [dir]', 'clear
+', 'cp [-fnr] source ... dest', 'echo [-eE] [arg ...]', 'export [-p][id=[value]]', 'false
+', 'grep [-bHhinqsvw] [-m max] [--silent] [--include pattern] pattern [files ...]', 'head [-nqv] &lt;files
+ ...&gt;', 'kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l', 'less [files ...]'
+;, 'ls [-aAdFhilQrRStUwx1] [paths ...]', 'mkdir [-pv] [directories ...]', 'mv [-fnv] source ... dest'
+;, 'pwd [files ...]', 'rm [-frR] [files ...]', 'sort [-chMnrR] [-o file] [files ...]', 'source
+ filename [arguments...]', 'tail [options] &lt;files ...&gt;', 'touch [-acm] [-d date] [-r ref] [--time
+word] file ...', 'true', 'unalias [-a] name [names ...]'];
+
+function chop(str, len) {
+var res = String(str).<span class="apidocCodeKeywordSpan">slice</span>(0, len - 2);
+res = res.length === len - 2 ? res + '&gt;' : res;
+return res;
+}
+
+module.exports = function () {
+var version = require('./../package.json').version;
+var result = '';
+...</pre></li>
     </ul>
 
 
@@ -20195,7 +21356,24 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+          return 0 &lt; U(e, "Day") &amp;&amp; 6 &gt; U(e, "Day");case "weekend" === a:
+          return 0 === U(e, "Day") || 6 === U(e, "Day");case -1 &lt; (d = W.weekdays.indexOf(a) % 7):
+          return U(e, "Day") === d;case -1 &lt; (d = W.months.indexOf(a) % 12):
+          return U(e, "Month") === d;}return rc(this, a, null, b, c);
+    }
+  }, reset: function reset(a) {
+    var b = {},
+        c;a = a || "hours";"date" === a &amp;&amp; (a = "days");c = Rb.<span class="apidocCodeKeywordSpan
+">some</span>(function (b) {
+      return a === b.name || a === b.name + "s";
+    });b[a] = a.match(/^days?/) ? 1 : 0;return c ? this.set(b, !0) : this;
+  }, clone: function clone() {
+    var a = new r(this.getTime());a.utc(!!this._utc);return a;
+  } });
+H(r, !0, !0, { iso: function iso() {
+    return this.toISOString();
+...</pre></li>
     </ul>
 
 
@@ -20217,7 +21395,23 @@ const out = $('ls -lah');
     return func.apply(isArray(value) ? value : [], args);
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// pushing the results into `rawFiles`.
+walkDir(path, pushFile);
+
+// Sort alphabetically be default,
+// unless -U is specified, in which case
+// we don't sort.
+if (!options.U) {
+  rawFiles = rawFiles.<span class="apidocCodeKeywordSpan">sort</span>(function (a, b) {
+    // Sort by size.
+    if (options.S) {
+      // Hack for windows - a directory lising
+      // in linux says the size is 4096, and Windows
+      // it's 0, leading to inconsistent sorts based
+      // on size, and failing tests.
+      var win = os.platform() === 'win32';
+...</pre></li>
     </ul>
 
 
@@ -20455,7 +21649,23 @@ const out = $('ls -lah');
     return func.apply(isArray(value) ? value : [], args);
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+
+
+
+'use strict';
+
+module.exports = function (args, command) {
+args.<span class="apidocCodeKeywordSpan">splice</span>(0, 2);
+var pipes = (args.indexOf('|') &gt; -1);
+if (args.length === 0) {
+  // If we don't have to parse arguments, do
+  // the quickest load: just the raw js file
+  // of the command and nothing else.
+  var cmd = require('./../dist/commands/' + command)();
+  cmd.exec.call(console, {options: {}}, {});
+...</pre></li>
     </ul>
 
 
@@ -20479,7 +21689,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+module.exports = {
+refresh: function refresh(vorpal, cb) {
+  cb = cb || function () {};
+  username(function (err, username) {
+    if (!err) {
+      var user = username;
+      var host = String(os.hostname()).<span class="apidocCodeKeywordSpan">split</span>('.')[0];
+      var home = pathConverter.unix(userHome);
+      var cwd = pathConverter.unix(process.cwd());
+      cwd = cwd.replace(home, '~');
+      var delimiter = user + '@' + host + ':' + cwd + '$';
+      // If we're on linux-based systems, color
+      // the prompt so we don't get confused.
+      if (!isWindows) {
+...</pre></li>
     </ul>
 
 
@@ -21412,7 +22638,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// invalid command and instead throw
+// Cash help.
+var windowsHelpFlag = false;
+var windowsCommandReject = 'is not recognized as an internal or external command';
+
+/* istanbul ignore next */
+proc.stdout.on('data', function (data) {
+  out += data.<span class="apidocCodeKeywordSpan">toString</span>('utf8');
+});
+
+/* istanbul ignore next */
+proc.stderr.on('data', function (data) {
+  var str = data.toString('utf8');
+  if (windows &amp;&amp; str.indexOf(windowsCommandReject) &gt; -1) {
+    windowsHelpFlag = true;
+...</pre></li>
     </ul>
 
 
@@ -21484,7 +22726,23 @@ const out = $('ls -lah');
   }
   return func.apply(object, arrayPush([this.value()], arguments));
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    return;
+  }
+  out += str;
+});
+
+proc.on('close', function () {
+  closed = true;
+  if (String(out).<span class="apidocCodeKeywordSpan">trim</span>() !== '') {
+    slf.log(String(out).replace(/\r\r/g, '\r'));
+    out = '';
+  }
+  if (windowsHelpFlag) {
+    slf.help();
+  }
+  /* istanbul ignore next */
+...</pre></li>
     </ul>
 
 
@@ -21818,7 +23076,23 @@ const out = $('ls -lah');
     return func.apply(isArray(value) ? value : [], args);
   });
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+if (cmd === undefined || argus === undefined) {
+  slf.help();
+  cb();
+  return;
+}
+
+argus.<span class="apidocCodeKeywordSpan">unshift</span>(cmd);
+argus.unshift('/C');
+var proc = undefined;
+var out = '';
+try {
+  proc = spawn('cmd', argus);
+} catch (e) {
+  /* istanbul ignore next */
+...</pre></li>
     </ul>
 
 
@@ -21992,7 +23266,24 @@ const out = $('ls -lah');
     <li>description and source-code<pre class="apidocCodePre">function wrapperValue() {
   return baseWrapperValue(this.__wrapped__, this.__actions__);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+      g,
+      f,
+      h,
+      l,
+      n;if ("string" === c) return a;g = v.call(a);d = va(a, g);e = A(a, g);if (null != a &amp;&amp; d || e) {
+    b || (b = []);if (1 &lt; b.length) for (l = b.length; l--;) {
+      if (b[l] === a) return "CYC";
+    }b.push(a);d = a.<span class="apidocCodeKeywordSpan">valueOf</span>() + s(a.constructor);f = e ? a : m.keys(a).sort();l = 0;
+for (n = f.length; l &lt; n; l++) {
+      h = e ? l : f[l], d += h + Ta(a[h], b);
+    }b.pop();
+  } else d = -Infinity === 1 / a ? "-0" : s(a &amp;&amp; a.valueOf ? a.valueOf() : a);return c + g + d;
+}function Ua(a, b) {
+  return a === b ? 0 !== a || 1 / a === 1 / b : Va(a) &amp;&amp; Va(b) ? Ta(a) === Ta(b) : !1;
+}
+function Va(a) {
+...</pre></li>
     </ul>
 
 
@@ -22305,6 +23596,7 @@ const out = $('ls -lah');
     <ul>
     <li>description and source-code<pre class="apidocCodePre">_sigint = function () {
   if (_this._sigintCount &gt; 1) {
+    _this.parent.emit('vorpal_exit');
     process.exit(0);
   } else {
     var text = _this.input();
@@ -22430,11 +23722,13 @@ const out = $('ls -lah');
       if (!valid) {
         break;
       }
-      if (passedArg &amp;&amp; matchArg.variadic === true) {
-        args[matchArg.name] = remainingArgs;
-      } else if (passedArg !== undefined) {
-        args[matchArg.name] = passedArg;
-        remainingArgs.shift();
+      if (passedArg !== undefined) {
+        if (matchArg.variadic === true) {
+          args[matchArg.name] = remainingArgs;
+        } else {
+          args[matchArg.name] = passedArg;
+          remainingArgs.shift();
+        }
       }
     }
   }
@@ -22487,7 +23781,7 @@ const out = $('ls -lah');
   for (var key in passedOpts) {
     var _ret = _loop(key);
 
-    if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) = ...</pre></li>
+    if ((typeof _ret === 'undefined' ? 'undefined' : _ ...</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
 
