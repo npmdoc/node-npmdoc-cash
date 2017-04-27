@@ -82,7 +82,7 @@
 <tspan x="10" y="1274">  │ ├─┬ babel-polyfill@6.23.0 </tspan>
 <tspan x="10" y="1290">  │ │ ├── babel-runtime@6.23.0 </tspan>
 <tspan x="10" y="1306">  │ │ ├── core-js@2.4.1 </tspan>
-<tspan x="10" y="1322">  │ │ └── regenerator-runtime@0.10.3 </tspan>
+<tspan x="10" y="1322">  │ │ └── regenerator-runtime@0.10.4 </tspan>
 <tspan x="10" y="1338">  │ ├── in-publish@2.0.0 </tspan>
 <tspan x="10" y="1354">  │ ├─┬ inquirer@0.11.0 </tspan>
 <tspan x="10" y="1370">  │ │ ├── ansi-escapes@1.4.0 </tspan>
